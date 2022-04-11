@@ -8,7 +8,8 @@
 
 ## ConvLSTM hybrid model
 
-![ConvLSTM](https://s2.loli.net/2021/12/23/qrdwmKANRM1YF8D.png)
+![ConvLSTM](https://s2.loli.net/2022/04/11/snrUBmIJf17gQTV.png)
+
 
 
 ## Environmental requirements
@@ -16,6 +17,8 @@
 - PyTorch: 1.8
 - Python: 3.7
 - Other python packages: please refer to the following code
+
+
 
 ## Code Structure
 
