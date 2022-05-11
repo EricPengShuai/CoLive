@@ -21,14 +21,17 @@ from Arguments import get_args
 import convlstm
 import os
 
+
 # CALCULATE DEGREE DISTANCE BETWEEN TWO 3D VECTORS
 def unit_vector(vector):
     return vector / np.linalg.norm(vector)
+
 
 def degree_distance(v1, v2):
     v1_u = unit_vector(v1)
     v2_u = unit_vector(v2)
     return np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0))/np.pi * 180
+
 
 def vector_to_ang(_v):
     # v = np.array(vector_ds[0][600][1])
@@ -81,6 +84,7 @@ def data_prepare(idx, videoId, userId, t_list):
     Userdata = np.array(Userdata)
     return Userdata
 
+
 def create_fixation_map(_X, _y, _idx, H, W):
     v = _y[_idx]
     theta, phi  = vector_to_ang(v)
@@ -88,6 +92,7 @@ def create_fixation_map(_X, _y, _idx, H, W):
     result = np.zeros(shape=(H, W))
     result[H-hi-1, W-wi-1] = 1
     return result
+
 
 def de_interpolate(raw_tensor, N):
     """
@@ -100,9 +105,10 @@ def de_interpolate(raw_tensor, N):
         out = out + raw_tensor[:, idx::10, idx::10]
     return out
 
-# 对视频的每一帧生成用户真实的fixation map (N, 90, 160) 
+
 def create_sal_fix(dataset, videoId, userId):
-    """
+    """generate the user's real fixation map (N, 90,160) for each frame of the video
+    
     :param dataset[i] = [timestamp, fixationList, saliencyMap] or dataset = all saliency_maps
     :param videoId: video's Id
     :param userId: user's Id
@@ -133,6 +139,7 @@ def create_sal_fix(dataset, videoId, userId):
     fixation_maps = mmscaler.fit_transform(headmap.ravel().reshape(-1, 1)).reshape(headmap.shape)
 
     return saliency_maps, fixation_maps
+
 
 class SaliencyDataset(Dataset):
     def __init__(self, saliency_maps,  fixation_maps, predict_time, transform=None):
@@ -168,6 +175,7 @@ class SaliencyDataset(Dataset):
 
         return saliency, fixation, predict_saliency, predict_fixation
 
+
 def sequentialData(dataset, idx, windows):
     """
     :param dataset: fixation maps, saliency maps or frames
@@ -200,6 +208,7 @@ def sequentialData(dataset, idx, windows):
     mix_output = torch.unsqueeze(mix_output, 0)
 
     return sal_output, fix_output, pre_sal_output, pre_fix_output, mix_output
+
 
 def train(dataset, frameId):
     loss = 0
@@ -236,6 +245,7 @@ def train(dataset, frameId):
     print('\nTrain finished', round(loss.item(), 5))
     # print('Updated model have been saved to', modelPath)
     return loss.item(), max_loss, min_loss
+
 
 def test(dataset, frameId, startTime):
     global good_test_frame, total_test_frame
@@ -309,6 +319,7 @@ def test(dataset, frameId, startTime):
     endTime = time.time()
 
     print(f'\nTest frameId={frameId}~{frameId+args.windows} finished, time: {round(endTime - startTime, 3)}')
+
 
 if __name__ == '__main__':
     # load the settings

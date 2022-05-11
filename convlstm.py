@@ -163,8 +163,8 @@ class ConvLSTM(nn.Module):
             layer_output = torch.stack(output_inner, dim=1)
             cur_layer_input = layer_output
 
-            layer_output_list.append(layer_output)      # 所有时间点的隐层状态
-            last_state_list.append([h, c])              # 最后一个时间点的隐层状态以及cell状态
+            layer_output_list.append(layer_output)      # Hidden layer states at all points in time
+            last_state_list.append([h, c])              # Hidden layer status and cell status at the last point in time
 
         if not self.return_all_layers:
             layer_output_list = layer_output_list[-1:]
@@ -242,8 +242,8 @@ class ConvLSTM_model(nn.Module):
 
     def forward(self, x):
         """
-            output_list 是最后一层的所有时间点状态的叠加之后的结果
-            output 是 output_list 最后一个时间点 [隐层状态, cell状态]
+            output_list is the stack of the hidden layer state at all points in time at the last layer
+            output is [hidden layer status, cell status] at the last point in time of output_list: 
         """
         output_list, output = self.conv_lstm(x)
 
